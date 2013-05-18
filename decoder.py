@@ -23,13 +23,13 @@ file...")
 else:
     print("Unexpected format detected")
 
-f.seek(0x13,0x00)
+f.seek(0x13)
 interleaved = f.read(1)
 if interleaved[0] == 1:
     print("File is interleaved...")
 else:
     print("File is not interleaved...")
-f.seek(0x22,0x00)
+f.seek(0x22)
 
 sys.stdout.write("Song title: ")
 readWord()
@@ -37,5 +37,18 @@ sys.stdout.write("Author: ")
 readWord()
 sys.stdout.write("Comments: ")
 readWord()
+
+byte = f.read(1)
+song_data = []
+while len(byte) > 0:
+    song_data.append(byte)
+    byte = f.read(1)
+
+song_data.pop()
+song_data.pop()
+song_data.pop()
+song_data.pop()
+print("Data length is %i bytes..." %len(song_data))
+print("Song length is %d frames..." %(len(song_data)/16.0))
 
 
