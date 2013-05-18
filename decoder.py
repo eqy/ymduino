@@ -1,6 +1,7 @@
 import os
 import sys
 import argparse
+import time
 from struct import *
 
 def readWord():
@@ -41,14 +42,43 @@ readWord()
 byte = f.read(1)
 song_data = []
 while len(byte) > 0:
-    song_data.append(byte)
+    song_data.append(byte[0])
     byte = f.read(1)
 
-song_data.pop()
-song_data.pop()
-song_data.pop()
-song_data.pop()
-print("Data length is %i bytes..." %len(song_data))
-print("Song length is %d frames..." %(len(song_data)/16.0))
+for i in range(0,4): 
+    song_data.pop()
+
+song_data_len = len(song_data)
+n_frames = song_data_len/16.0
+
+print("Data length is %i bytes..." %song_data_len)
+print("Song length is %d frames..." %song_data_len)
+
+if interleaved[0] ==1:
+    print("Deinterleaving...")
+
+registers = {}
+for i in range(0,16):
+    registers[i] = []
+    
+    j=0
+    while j < n_frames:
+        registers[i].append(song_data.pop(0))
+        j+=1
+
+current_time = time.time()
+j=0
+while j < n_frames:
+    current_time = time.time()
+    frame = {}
+    j+=1
+    for i in range(0,16):
+        frame[i] = registers[i].pop(0)
+        print("Register {reg_n}: {value} {bin_value}".format( \
+            reg_n=i, value=hex(frame[i]), bin_value=bin(frame[i])))
+    while time.time() < (current_time + .5): 
+        time.sleep(0.01)         
+
+
 
 
