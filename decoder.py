@@ -52,7 +52,7 @@ song_data_len = len(song_data)
 n_frames = song_data_len/16.0
 
 print("Data length is %i bytes..." %song_data_len)
-print("Song length is %d frames..." %song_data_len)
+print("Song length is %d frames..." %n_frames)
 
 if interleaved[0] ==1:
     print("Deinterleaving...")
@@ -74,9 +74,10 @@ while j < n_frames:
     j+=1
     for i in range(0,16):
         frame[i] = registers[i].pop(0)
-        print("Register {reg_n}: {value} {bin_value}".format( \
-            reg_n=i, value=hex(frame[i]), bin_value=bin(frame[i])))
-    while time.time() < (current_time + 5): 
+        print("Register {reg_n:>2d}: 0x{value:02x} {bin_value:08b}".format( \
+            reg_n=i, value=frame[i], bin_value=frame[i]))
+    print("{:=^26}".format(""))
+    while time.time() < (current_time + .5): 
         time.sleep(0.01)         
 
 
