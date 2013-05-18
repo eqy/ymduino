@@ -1,14 +1,6 @@
 import os
 import sys
 import argparse
-from struct import *
-
-def readWord():
-    char = f.read(1)
-    while char[0] != 0:
-        sys.stdout.write("%s" %char.decode('ascii'))
-        char = f.read(1)
-    sys.stdout.write('\n')
 
 parser = argparse.ArgumentParser(description='path to file')
 parser.add_argument('path')
@@ -23,19 +15,16 @@ file...")
 else:
     print("Unexpected format detected")
 
-f.seek(0x13,0x00)
+f.seek(0x14,0x00)
 interleaved = f.read(1)
-if interleaved[0] == 1:
+if interleaved:
     print("File is interleaved...")
 else:
     print("File is not interleaved...")
-f.seek(0x22,0x00)
-
-sys.stdout.write("Song title: ")
-readWord()
-sys.stdout.write("Author: ")
-readWord()
-sys.stdout.write("Comments: ")
-readWord()
+f.seek(0x08,0x00)
+char = f.read(1)
+while char != 0:
+    print(char)
+    char = f.read(1)
 
 
