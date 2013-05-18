@@ -76,7 +76,7 @@ while j < n_frames:
         frame[i] = registers[i].pop(0)
         print("Register {reg_n}: {value} {bin_value}".format( \
             reg_n=i, value=hex(frame[i]), bin_value=bin(frame[i])))
-    while time.time() < (current_time + .5): 
+    while time.time() < (current_time + 5): 
         time.sleep(0.01)         
 
 
