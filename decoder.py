@@ -1,7 +1,7 @@
 import os
 import sys
 import argparse
-import array.array
+import array
 import time
 import serial
 
@@ -57,32 +57,29 @@ print("Song length is %d frames..." %n_frames)
 
 if interleaved[0] ==1:
     print("Deinterleaving...")
-
-registers = {}
-for i in range(0,16):
-    registers[i] = []
-    
-    j=0
-    while j < n_frames:
-        registers[i].append(song_data.pop(0))
-        j+=1
+    registers = {}
+    for i in range(0,16):
+        registers[i] = [] 
+        j=0
+        while j < n_frames:
+            registers[i].append(song_data.pop(0))
+            j+=1
 
 arduino = serial.Serial('/dev/ttyACM0', 9600)
-
 current_time = time.time()
 j=0
 while j < n_frames:
     current_time = time.time()
-    frame = {}
+    frame = array.array('B')
     j+=1
     for i in range(0,16):
-        frame[i] = registers[i].pop(0)
+        current_reg = registers[i].pop(0)
+        frame.append(current_reg)
         print("Register {reg_n:>2d}: 0x{value:02x} {bin_value:08b}".format( \
-            reg_n=i, value=frame[i], bin_value=frame[i]))
-    for i in range(0,16):
-        arduino.write(array('B', [frame[i]]))
+            reg_n=i, value=current_reg, bin_value=current_reg))
+    arduino.write(frame)
     print("{:=^26}".format(""))
-    while time.time() < (current_time +  1): 
+    while time.time() < (current_time +  0.5): 
         time.sleep(0.01)         
 
 
