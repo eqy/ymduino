@@ -2,7 +2,7 @@ import os
 import sys
 import argparse
 import time
-from struct import *
+import serial
 
 def readWord():
     char = f.read(1)
@@ -66,6 +66,8 @@ for i in range(0,16):
         registers[i].append(song_data.pop(0))
         j+=1
 
+arduino = serial.Serial('/dev/ttyACM0', 9600)
+
 current_time = time.time()
 j=0
 while j < n_frames:
@@ -76,6 +78,8 @@ while j < n_frames:
         frame[i] = registers[i].pop(0)
         print("Register {reg_n:>2d}: 0x{value:02x} {bin_value:08b}".format( \
             reg_n=i, value=frame[i], bin_value=frame[i]))
+    for i in range(0,16):
+        arduino.write(bytes(frame[i]))
     print("{:=^26}".format(""))
     while time.time() < (current_time + .5): 
         time.sleep(0.01)         
