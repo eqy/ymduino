@@ -79,8 +79,7 @@ while j < n_frames:
             reg_n=i, value=current_reg, bin_value=current_reg))
     arduino.write(frame)
     print("{:=^26}".format(""))
-    while time.time() < (current_time +  0.5): 
-        time.sleep(0.01)         
+    time.sleep(0.01)         
 
 
 
