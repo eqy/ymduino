@@ -1,3 +1,7 @@
 *.swp
 *.YM
+*.ym
 *.Y5
+*.y5
+*.bin
+outputfile
